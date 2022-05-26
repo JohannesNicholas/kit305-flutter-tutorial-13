@@ -19,3 +19,4 @@ doc/api/
 *.js_
 *.js.deps
 *.js.map
+tutorial13_base/android/app/google-services.json

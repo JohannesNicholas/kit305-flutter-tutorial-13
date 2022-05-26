@@ -4,13 +4,22 @@ import 'package:provider/provider.dart';
 
 import 'movie_details.dart';
 import 'movie.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+Future<void> main() async {
+  //WidgetsFlutterBinding.ensureInitialized(); //added this line
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget
-{
+class MyApp extends StatelessWidget {
+  // Create the initialization Future outside of `build`:
+
   @override
   Widget build(BuildContext context) {
     //BEGIN: the old MyApp builder from last week
@@ -21,15 +30,12 @@ class MyApp extends StatelessWidget
             theme: ThemeData(
               primarySwatch: Colors.blue,
             ),
-            home: MyHomePage(title: 'Database Tutorial')
-        )
-    );
+            home: MyHomePage(title: 'Database Tutorial')));
     //END: the old MyApp builder from last week
   }
 }
 
-class MyHomePage extends StatefulWidget
-{
+class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
@@ -38,14 +44,10 @@ class MyHomePage extends StatefulWidget
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-
-class _MyHomePageState extends State<MyHomePage>
-{
+class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<MovieModel>(
-        builder:buildScaffold
-    );
+    return Consumer<MovieModel>(builder: buildScaffold);
   }
 
   Scaffold buildScaffold(BuildContext context, MovieModel movieModel, _) {
@@ -53,12 +55,10 @@ class _MyHomePageState extends State<MyHomePage>
       appBar: AppBar(
         title: Text(widget.title),
       ),
-
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-
             //YOUR UI HERE
             Expanded(
               child: ListView.builder(
@@ -67,19 +67,20 @@ class _MyHomePageState extends State<MyHomePage>
                     var image = movie.image;
                     return ListTile(
                       title: Text(movie.title),
-                      subtitle: Text(movie.year.toString() + " - " + movie.duration.toString() + " Minutes"),
+                      subtitle: Text(movie.year.toString() +
+                          " - " +
+                          movie.duration.toString() +
+                          " Minutes"),
                       leading: image != null ? Image.network(image) : null,
-
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (context) {
-                              return MovieDetails(id: index);
-                            }));
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return MovieDetails(id: index);
+                        }));
                       },
                     );
                   },
-                  itemCount: movieModel.items.length
-              ),
+                  itemCount: movieModel.items.length),
             )
           ],
         ),
@@ -96,6 +97,8 @@ class FullScreenText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(textDirection:TextDirection.ltr, child: Column(children: [ Expanded(child: Center(child: Text(text))) ]));
+    return Directionality(
+        textDirection: TextDirection.ltr,
+        child: Column(children: [Expanded(child: Center(child: Text(text)))]));
   }
 }
